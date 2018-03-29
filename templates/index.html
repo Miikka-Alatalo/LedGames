@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Snek</title>
+  <meta charset="utf-8" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <style>
+
+  </style>
+  <script>
+    function sendDirection(direction) {
+      var url = "http://192.168.10.50:5000/api";
+      $.ajax({
+        url: url,
+        data: {
+          'direction': direction
+        },
+        type: 'PUT',
+        success: function (response) {
+          console.log(response);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+
+    }
+
+    //document.addEventListener('DOMContentLoaded', startYourEngines, false);
+  </script>
+</head>
+
+<body>
+  <table>
+  <tr>
+    <th></th>
+    <th><button id="up" onclick="sendDirection('U')" type="button">U</button></th>
+    <th></th>
+  </tr>
+  <tr>
+    <td><button id="left" onclick="sendDirection('L')" type="button">L</button></td>
+    <td><button id="staph" onclick="sendDirection('staph')" type="button">!</button></td>
+    <td><button id="right" onclick="sendDirection('R')" type="button">R</button></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><button id="down" onclick="sendDirection('D')" type="button">D</button></td>
+    <td></td>
+  </tr>
+</table>
+
+</body>
+
+</html>
