@@ -9,15 +9,20 @@ from random import randint
 
 waitTime = 0.25
 
-snakeColorR = 0
-snakeColorG = 255
-snakeColorB = 0
+snakeHeadColorR = 0
+snakeHeadColorG = 255
+snakeHeadColorB = 0
+
+snakeBodyColorR = 0
+snakeBodyColorG = 100
+snakeBodyColorB = 0
 
 foodColorR = 255
 foodColorG = 0
 foodColorB = 0
 
-
+snakeBody = []
+snakeLength = 0
 
 
 app = Flask(__name__)
@@ -69,7 +74,7 @@ class SimpleClock(SampleBase):
             canvas.SetPixel(x+1, y, r, g, b)
             canvas.SetPixel(x, y+1, r, g, b)
             canvas.SetPixel(x+1, y+1, r, g, b)
-
+        global snakeLength
         snakeXCoord = 0
         snakeYCoord = 0
         foodXCoord = randint(0,15)
@@ -83,7 +88,7 @@ class SimpleClock(SampleBase):
 
             canvas = self.matrix.CreateFrameCanvas()
 
-
+            snakeBody.insert(0, {"x":snakeXCoord,"y":snakeYCoord})
 
             if (direction == 'U'):
                 snakeYCoord-=1
@@ -103,15 +108,24 @@ class SimpleClock(SampleBase):
             elif (snakeYCoord < 0):
                 snakeYCoord = 7
 
-            if(snakeXCoord == foodXCoord and snakeYCoord == foodYCoord):
+            if (snakeXCoord == foodXCoord and snakeYCoord == foodYCoord):
+                snakeLength += 1
                 foodXCoord = randint(0,15)
                 foodYCoord = randint(0,7)
+
+            if (len(snakeBody) > snakeLength):
+                snakeBody.pop()
+
             #food
             printBlock(canvas, foodXCoord, foodYCoord, foodColorR, foodColorG, foodColorB)
 
-            #snake
-            printBlock(canvas, snakeXCoord, snakeYCoord, snakeColorR, snakeColorG, snakeColorB)
+            #snake body
+            for bodyPart in snakeBody:
+                printBlock(canvas, bodyPart["x"], bodyPart["y"], snakeBodyColorR, snakeBodyColorG, snakeBodyColorB)
 
+            #snake head
+            printBlock(canvas, snakeXCoord, snakeYCoord, snakeHeadColorR, snakeHeadColorG, snakeHeadColorB)
+            
             offset_canvas = self.matrix.SwapOnVSync(canvas)
 
             time.sleep(0.25)
